@@ -1,0 +1,43 @@
+name: Daily Lead Report
+
+on:
+  workflow_dispatch:
+  schedule:
+    # 08:00 Asia/Kolkata (UTC+05:30) = 02:30 UTC
+    - cron: "30 2 * * *"
+
+permissions:
+  contents: read
+
+jobs:
+  discover-leads:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run discovery
+        env:
+          SERPAPI_API_KEY: ${{ secrets.SERPAPI_API_KEY }}
+        run: python -m src.main --config config/settings.example.json --output-dir output
+
+      - name: Upload report artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: daily-website-lead-report
+          path: |
+            output/leads.csv
+            output/daily_report.md
+          if-no-files-found: warn
+          retention-days: 14
