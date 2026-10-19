@@ -1,0 +1,42 @@
+{
+  "services": [
+    "website development",
+    "website redesign",
+    "SEO",
+    "digital marketing",
+    "business automation",
+    "CRM implementation",
+    "e-commerce development",
+    "social media management"
+  ],
+  "regions": [
+    "United States",
+    "United Kingdom",
+    "Canada",
+    "Australia",
+    "India"
+  ],
+  "business_categories": [
+    "local service businesses",
+    "clinics and healthcare practices",
+    "accountants and professional services",
+    "manufacturers",
+    "coaching and education businesses",
+    "restaurants and hospitality",
+    "retail businesses"
+  ],
+  "search_queries": [
+    "{category} {region} outdated website",
+    "{category} {region} no website",
+    "{category} {region} website redesign",
+    "{category} {region} looking for SEO agency",
+    "{category} {region} improve online presence"
+  ],
+  "max_queries": 30,
+  "results_per_query": 8,
+  "max_sites_to_inspect": 60,
+  "request_timeout_seconds": 12,
+  "polite_delay_seconds": 1.5,
+  "minimum_score": 20,
+  "user_agent": "AxonixITLeadResearchBot/1.0 (+contact: configure a real business contact URL before production use)"
+}
