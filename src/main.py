@@ -32,11 +32,22 @@ def run(config_path: str, output_dir: str) -> list[dict]:
     delay = float(config.get("polite_delay_seconds", 1.5))
 
     search_results = []
+    failures = 0
     for query in queries[:max_queries]:
         try:
-            search_results.extend(search_web(query, results_per_query, timeout, delay, user_agent))
+            found = search_web(query, results_per_query, timeout, delay, user_agent)
+            search_results.extend(found)
+            print(f"[INFO] Query returned {len(found)} results: {query}")
         except Exception as exc:
+            failures += 1
             print(f"[WARN] Search failed for {query!r}: {type(exc).__name__}: {exc}")
+
+    if not search_results:
+        raise RuntimeError(
+            f"Search returned zero results across {min(len(queries), max_queries)} queries "
+            f"({failures} query errors). Check network/search-provider access; configure "
+            "SERPAPI_API_KEY in GitHub Actions secrets for a more reliable provider."
+        )
 
     # Exclude search engines, social networks and obvious directories; prioritize actual business sites.
     excluded = ("duckduckgo.com", "google.com", "bing.com", "facebook.com", "instagram.com",
@@ -52,6 +63,11 @@ def run(config_path: str, output_dir: str) -> list[dict]:
         seen_urls.add(item["url"])
         candidates.append(item)
     candidates = candidates[:int(config.get("max_sites_to_inspect", 60))]
+    if not candidates:
+        raise RuntimeError(
+            f"Search returned {len(search_results)} results but none were usable business websites. "
+            "Check search result parsing and excluded domains."
+        )
 
     leads = []
     for item in candidates:
