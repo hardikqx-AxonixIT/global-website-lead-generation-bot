@@ -1,0 +1,15 @@
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
+.env.*
+!.env.example
+output/
+data/
+*.csv
+*.xlsx
+.DS_Store
+.pytest_cache/
+.coverage
+htmlcov/
